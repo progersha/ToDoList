@@ -185,6 +185,9 @@ body{
     font-weight: bold;
     color: black;
 }
+#list {
+    overflow: scroll;
+}
 
 
 

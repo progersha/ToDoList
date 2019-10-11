@@ -7,6 +7,15 @@ const plus = document.querySelector(".plus");
 date.textContent = new Date().toLocaleString('en', {weekday: 'long', month: 'short', day: 'numeric'});
 
 let tasks = [];
+let localtasks = [];
+let taskId = 0;
+
+for (let i = 0; i < localStorage.length; i++) {
+    localtasks[i] = localStorage.getItem(i);
+}
+
+tasks = localtasks.slice();
+localtasks.length = 0;
 
 function addToDo(taskName) {
     if (taskName == '')
@@ -15,7 +24,10 @@ function addToDo(taskName) {
         name: taskName,
         closed: false
     });
+    localStorage.setItem(taskId, JSON.stringify(tasks[taskId]));
+    taskId++;
     render();
+
 }
 
 function render() {
@@ -28,12 +40,11 @@ function render() {
         const line = task.closed
             ? 'lineThrough'
             : '';
-
         return `<li class="item">
-<i class="fa ${icon} co" onclick="onToggleStatus(${i})"></i>
-<p class="text ${line} value = ${task.name} "> ${task.name} </p>
-<i class="fa fa-trash-o de" job="delete" onclick="onDelete(${i})"></i>
-</li>`;
+                <i class="fa ${icon} co" onclick="onToggleStatus(${i})"></i>
+                <p class="text ${line} value = ${task.name} "> ${task.name} </p>
+                <i class="fa fa-trash-o de" job="delete" onclick="onDelete(${i})"></i>
+                </li>`;
     }).join('');
 }
 
@@ -49,6 +60,7 @@ function onToggleStatus(index) {
 
 function onDelete(index) {
     tasks.splice(index, 1);
+    localStorage.removeItem(index);
     render();
 }
 
@@ -57,5 +69,5 @@ plus.addEventListener('click', (event) => {
     input.value = '';
 });
 
-addToDo('Drink coffe');
-addToDo('Eat egges');
+// addToDo('Drink coffe');
+// addToDo('Eat egges');
