@@ -6,34 +6,16 @@ const plus = document.querySelector(".plus");
 
 date.textContent = new Date().toLocaleString('en', {weekday: 'long', month: 'short', day: 'numeric'});
 
-let tasks = [];
-let localtasks = [];
-let taskId = 0;
+const key = 'ks_todo';
+let tasks = JSON.parse(localStorage.getItem(key)) || [];
+render();
 
-for (let i = 0; i < localStorage.length; i++) {
-    localtasks[i] = localStorage.getItem(i);
-}
-
-tasks = localtasks.slice();
-localtasks.length = 0;
-
-function addToDo(taskName) {
-    if (taskName == '')
-        return;
-    tasks.push({
-        name: taskName,
-        closed: false
-    });
-    localStorage.setItem(taskId, JSON.stringify(tasks[taskId]));
-    taskId++;
-    render();
-
+function updateStorage() {
+    localStorage.setItem(key, JSON.stringify(tasks));
 }
 
 function render() {
-    list.innerHTML = tasks.filter((task) => {
-        return true;
-    }).map((task, i) => {
+    list.innerHTML = tasks.map((task, i) => {
         const icon = task.closed
             ? 'fa-check-circle'
             : 'fa-circle-thin';
@@ -48,6 +30,17 @@ function render() {
     }).join('');
 }
 
+function addToDo(taskName) {
+    if (taskName == '')
+        return;
+    tasks.push({
+        name: taskName,
+        closed: false
+    });
+    updateStorage();
+    render();
+}
+
 function onToggleStatus(index) {
     tasks.map((task, i) => {
         if (i == index) {
@@ -55,12 +48,14 @@ function onToggleStatus(index) {
         }
         return task;
     });
+    updateStorage();
     render();
 }
 
 function onDelete(index) {
     tasks.splice(index, 1);
     localStorage.removeItem(index);
+    updateStorage();
     render();
 }
 
