@@ -114,11 +114,10 @@ body{
 /* ------------ add item ------------ */
 .add-to-do{
     position: absolute;
-    bottom: 20px;
     width: 380px;
-    height: 40px;
+    height: 60px;
     background-color: #FFF;
-    padding: 10px;
+    padding: 8px;
     border-top: 1px solid rgba(0,0,0,0.1);
 }
 .add-to-do i{
@@ -184,9 +183,6 @@ body{
 .content .nav-link.active {
     font-weight: bold;
     color: black;
-}
-#list {
-    overflow: scroll;
 }
 
 

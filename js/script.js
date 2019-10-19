@@ -1,6 +1,7 @@
 const clear = document.querySelector(".clear");
 const dateElement = document.getElementById("date");
 const list = document.getElementById("list");
+const filters$ = document.getElementById("filters");
 const input = document.getElementById("input");
 const plus = document.querySelector(".plus");
 
@@ -8,6 +9,23 @@ date.textContent = new Date().toLocaleString('en', {weekday: 'long', month: 'sho
 
 const key = 'ks_todo';
 let tasks = JSON.parse(localStorage.getItem(key)) || [];
+let filterdTasks = [];
+let currentFilter = 'all';
+
+const filters = [
+    {
+        label: 'All',
+        id: 'all'
+    },
+    {
+        label: 'Active',
+        id: 'active'
+    },
+    {
+        label: 'Closed',
+        id: 'closed'
+    },
+];
 render();
 
 function updateStorage() {
@@ -15,7 +33,15 @@ function updateStorage() {
 }
 
 function render() {
-    list.innerHTML = tasks.map((task, i) => {
+    list.innerHTML = tasks.filter((task) => {
+        if (currentFilter == 'closed') {
+            return task.closed;
+        }
+        if (currentFilter == 'active') {
+            return !task.closed;
+        }
+        return true;
+    }).map((task, i) => {
         const icon = task.closed
             ? 'fa-check-circle'
             : 'fa-circle-thin';
@@ -64,5 +90,25 @@ plus.addEventListener('click', (event) => {
     input.value = '';
 });
 
-// addToDo('Drink coffe');
-// addToDo('Eat egges');
+function setFilterById(filterId) {
+    currentFilter = filterId;
+    renderFilter();
+    render();
+}
+
+function renderFilter() {
+    filters$.innerHTML = filters.map((filter) => {
+        const activeClass = currentFilter === filter.id
+            ? 'active'
+            : '';
+
+        return `
+                <li class="nav-item">
+                <a class="nav-link ${activeClass}" href="#" onclick="setFilterById('${filter.id}')">
+                ${filter.label}
+                </a>
+                </li>
+                `;
+    }).join('');
+}
+renderFilter();
