@@ -9,7 +9,6 @@ date.textContent = new Date().toLocaleString('en', {weekday: 'long', month: 'sho
 
 const key = 'ks_todo';
 let tasks = JSON.parse(localStorage.getItem(key)) || [];
-let filterdTasks = [];
 let currentFilter = 'all';
 
 const filters = [
